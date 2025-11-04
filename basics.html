@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>66单打规则 - Pokemon Showdown指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .rules-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .rule-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #4CAF50;
+        }
+
+        .rule-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .rule-card.basic {
+            border-left-color: #2196F3;
+        }
+
+        .rule-card.team {
+            border-left-color: #FF9800;
+        }
+
+        .rule-card.battle {
+            border-left-color: #9C27B0;
+        }
+
+        .rule-card.ban {
+            border-left-color: #F44336;
+        }
+
+        .rule-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .rule-card h3 i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .rule-item {
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 3px solid #e0e0e0;
+        }
+
+        .rule-item strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .rule-item p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .quick-reference {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .quick-reference h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .reference-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .ref-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .ref-item:hover {
+            background: #e9ecef;
+        }
+
+        .ref-item .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2196F3;
+            margin-bottom: 5px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .rules-container {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .reference-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+  <a href="index.html">首页</a>
+    <div class="container">
+        <header>
+            <h1>🎮 Pokemon Showdown 66单打规则</h1>
+            <p class="subtitle">完全指南 - 掌握Gen 9 OU对战规则</p>
+        </header>
+
+        <div class="highlight-box">
+            💡 66单打是PS最受欢迎的模式！双方各带6只宝可梦，进行6选3的单打对战
+        </div>
+
+        <div class="rules-container">
+            <div class="rule-card basic">
+                <h3>📋 基础规则</h3>
+                <div class="rule-item">
+                    <strong>对战模式</strong>
+                    <p>66单打对战，每方选6只宝可梦进行战斗</p>
+                </div>
+                <div class="rule-item">
+                    <strong>等级系统</strong>
+                    <p>所有宝可梦自动调整为Lv.50或Lv.100（根据分级设置）</p>
+                </div>
+                <div class="rule-item">
+                    <strong>胜负条件</strong>
+                    <p>当一方所有场上宝可梦全部失去战斗能力时判负</p>
+                </div>
+            </div>
+
+            <div class="rule-card team">
+                <h3>👥 队伍构建规则</h3>
+                <div class="rule-item">
+                    <strong>队伍数量</strong>
+                    <p>每支队伍必须包含6只不同的宝可梦</p>
+                </div>
+                <div class="rule-item">
+                    <strong>道具限制</strong>
+                    <p>同队宝可梦不能携带相同的道具</p>
+                </div>
+                <div class="rule-item">
+                    <strong>个体值与努力值</strong>
+                    <p>个体值默认为31，努力值总和510点，单项最高252点</p>
+                </div>
+            </div>
+
+            <div class="rule-card battle">
+                <h3>⚔️ 战斗规则</h3>
+                <div class="rule-item">
+                    <strong>先制度系统</strong>
+                    <p> 技能先制度决定出手顺序，相同先制度时速度决定出手顺序，相同速度时随机决定</p>
+                </div>
+                <div class="rule-item">
+                    <strong>招式限制</strong>
+                    <p>每只宝可梦最多携带4个招式，不能重复</p>
+                </div>
+                <div class="rule-item">
+                    <strong>天气与场地</strong>
+                    <p>天气和场地效果会持续影响战斗，最多持续5回合</p>
+                </div>
+            </div>
+
+            <div class="rule-card ban">
+                <h3>🚫 禁止事项</h3>
+                <div class="rule-item">
+                    <strong>禁用宝可梦</strong>
+                    <p>神兽、幻兽以及过于强力的宝可梦被禁止使用</p>
+                </div>
+                <div class="rule-item">
+                    <strong>禁用招式</strong>
+                    <p>一击必杀技、某些破坏平衡的招式被禁止</p>
+                </rule-item>
+                <div class="rule-item">
+                    <strong>战术限制</strong>
+                    <p>禁止使用无限循环、拖延时间等不良战术</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-reference">
+            <h2>📊 快速参考表</h2>
+            <div class="reference-grid">
+                <div class="ref-item">
+                    <div class="number">6</div>
+                    <div>队伍宝可梦数量</div>
+                </div>
+                <div class="ref-item">
+                    <div class="number">6</div>
+                    <div>上场宝可梦数量</div>
+                </div>
+                <div class="ref-item">
+                    <div class="number">510</div>
+                    <div>努力值总和</div>
+                </div>
+                <div class="ref-item">
+                    <div class="number">252</div>
+                    <div>单项努力值上限</div>
+                </div>
+                <div class="ref-item">
+                    <div class="number">4</div>
+                    <div>每只招式数量</div>
+                </div>
+                <div class="ref-item">
+                    <div class="number">50/100</div>
+                    <div>宝可梦等级</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 Pokemon Showdown 指南站 | 规则可能随版本更新而变化 <br>
+            随机模式抽号器：https://www.diving-fish.com/random-pokemon</p>
+        </footer>
+    </div>
+
+    <script>
+        // 添加卡片点击效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.rule-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+
+            // 添加滚动动画效果
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // 为所有卡片添加初始样式和观察
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

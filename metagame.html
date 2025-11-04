@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宝可梦属性克制表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-attachment: fixed;
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .control-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .type-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .type-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .type-btn.active {
+            opacity: 1;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+
+        .type-header {
+            font-weight: bold;
+            writing-mode: vertical-lr;
+            transform: rotate(180deg);
+            padding: 10px 5px;
+            text-align: center;
+        }
+
+        .effect-cell {
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .effect-4 { background-color: #ff4d4d; color: white; } /* 4倍克制 */
+        .effect-2 { background-color: #ff9999; } /* 2倍克制 */
+        .effect-1 { background-color: #f0f0f0; } /* 1倍正常 */
+        .effect-0_5 { background-color: #99ccff; } /* 0.5倍抵抗 */
+        .effect-0_25 { background-color: #4d94ff; color: white; } /* 0.25倍抵抗 */
+        .effect-0 { background-color: #666666; color: white; } /* 0倍无效 */
+
+        .explanation {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .explanation h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* 属性颜色定义 */
+        .normal { background-color: #A8A878; color: white; }
+        .fire { background-color: #F08030; color: white; }
+        .water { background-color: #6890F0; color: white; }
+        .electric { background-color: #F8D030; color: black; }
+        .grass { background-color: #78C850; color: white; }
+        .ice { background-color: #98D8D8; color: black; }
+        .fighting { background-color: #C03028; color: white; }
+        .poison { background-color: #A040A0; color: white; }
+        .ground { background-color: #E0C068; color: black; }
+        .flying { background-color: #A890F0; color: white; }
+        .psychic { background-color: #F85888; color: white; }
+        .bug { background-color: #A8B820; color: white; }
+        .rock { background-color: #B8A038; color: white; }
+        .ghost { background-color: #705898; color: white; }
+        .dragon { background-color: #7038F8; color: white; }
+        .dark { background-color: #705848; color: white; }
+        .steel { background-color: #B8B8D0; color: black; }
+        .fairy { background-color: #EE99AC; color: black; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .subtitle { font-size: 1rem; }
+            .control-panel { flex-direction: column; }
+            .type-btn { padding: 6px 12px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+  <a href="index.html">首页</a>
+    <div class="container">
+        <header>
+            <h1>宝可梦属性克制表</h1>
+            <p class="subtitle">掌握属性相克，在对战中占据优势！</p>
+        </header>
+
+        <div class="control-panel">
+            <div class="type-filter" id="typeFilter">
+                <!-- 类型按钮将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="typeChart">
+                <thead>
+                    <tr>
+                        <th>攻击方 →<br>防御方 ↓</th>
+                        <!-- 表头将通过JavaScript动态生成 -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 表格内容将通过JavaScript动态生成 -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="explanation">
+            <h2>如何使用属性克制表</h2>
+            <p>这个表格展示了宝可梦对战中不同属性之间的相克关系[2,8](@ref)：</p>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color effect-4"></div>
+                    <span>4倍伤害 (效果绝佳)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color effect-2"></div>
+                    <span>2倍伤害 (效果绝佳)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color effect-1"></div>
+                    <span>正常伤害</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color effect-0_5"></div>
+                    <span>0.5倍伤害 (效果不好)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color effect-0_25"></div>
+                    <span>0.25倍伤害 (效果不好)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color effect-0"></div>
+                    <span>0倍伤害 (无效)</span>
+                </div>
+            </div>
+
+            <h3>双属性伤害计算规则[8](@ref)</h3>
+            <p>当宝可梦拥有两种属性时，伤害倍率是两种属性倍率的乘积：</p>
+            <ul>
+                <li><strong>4倍伤害</strong>：攻击对两种属性都效果绝佳 (2 × 2 = 4)</li>
+                <li><strong>2倍伤害</strong>：攻击对一种属性效果绝佳，对另一种效果一般 (2 × 1 = 2)</li>
+                <li><strong>正常伤害</strong>：攻击对两种属性都效果一般，或一种效果绝佳另一种效果不好 (2 × 0.5 = 1)</li>
+                <li><strong>0.5倍伤害</strong>：攻击对一种属性效果不好，对另一种效果一般 (0.5 × 1 = 0.5)</li>
+                <li><strong>0.25倍伤害</strong>：攻击对两种属性都效果不好 (0.5 × 0.5 = 0.25)</li>
+                <li><strong>0倍伤害</strong>：攻击对至少一种属性完全无效 (0 × 任何数 = 0)</li>
+            </ul>
+
+            <h3>对战小贴士</h3>
+            <p>1. 优先使用效果绝佳(2倍或4倍伤害)的技能攻击对手[4](@ref)。</p>
+            <p>2. 注意双属性宝可梦的复合弱点与抗性，如地面+岩石属性宝可梦对水和草系有4倍弱点。</p>
+            <p>3. 有些属性拥有免疫特性，如幽灵系免疫一般系和格斗系[7](@ref)。</p>
+        </div>
+
+        <footer>
+            <p>© 2023 宝可梦属性克制表 | 数据基于宝可梦最新版本[8](@ref)</p>
+        </footer>
+    </div>
+
+    <script>
+        // 宝可梦属性克制数据[1,2,8](@ref)
+        const typeChart = {
+            "normal": {
+                "superEffective": [],
+                "notVeryEffective": ["rock", "steel"],
+                "noEffect": ["ghost"],
+                "defense": {
+                    "superEffective": ["fighting"],
+                    "notVeryEffective": [],
+                    "noEffect": ["ghost"]
+                }
+            },
+            "fire": {
+                "superEffective": ["grass", "ice", "bug", "steel"],
+                "notVeryEffective": ["fire", "water", "rock", "dragon"],
+                "noEffect": [],
+                "defense": {
+                    "superEffective": ["water", "ground", "rock"],
+                    "notVeryEffective": ["fire", "grass", "ice", "bug", "steel", "fairy"],
+                    "noEffect": []
+                }
+            },
+            "water": {
+                "superEffective": ["fire", "ground", "rock"],
+                "notVeryEffective": ["water", "grass", "dragon"],
+                "noEffect": [],
+                "defense": {
+                    "superEffective": ["electric", "grass"],
+                    "notVeryEffective": ["fire", "water", "ice", "steel"],
+                    "noEffect": []
+                }
+            },
+            "electric": {
+                "superEffective": ["water", "flying"],
+                "notVeryEffective": ["electric", "grass", "dragon"],
+                "noEffect": ["ground"],
+                "defense": {
+                    "superEffective": ["ground"],
+                    "notVeryEffective": ["electric", "flying", "steel"],
+                    "noEffect": []
+                }
+            },
+            "grass": {
+                "superEffective": ["water", "ground", "rock"],
+                "notVeryEffective": ["fire", "grass", "poison", "flying", "bug", "dragon", "steel"],
+                "noEffect": [],
+                "defense": {
+                    "superEffective": ["fire", "ice", "poison", "flying", "bug"],
+                    "notVeryEffective": ["water", "electric", "grass", "ground"],
+                    "noEffect": []
+                }
+            },
+            "ice": {
+                "superEffective": ["grass", "ground", "flying", "dragon"],
+                "notVeryEffective": ["fire", "water", "ice", "steel"],
+                "noEffect": [],
+                "defense": {
+                    "superEffective": ["fire", "fighting", "rock", "steel"],
+                    "notVeryEffective": ["ice"],
+                    "noEffect": []
+                }
+            },
+            "fighting": {
+                "superEffective": ["normal", "ice", "rock", "dark", "steel"],
+                "notVeryEffective": ["poison", "flying", "psychic", "bug", "fairy"],
+                "noEffect": ["ghost"],
+                "defense": {
+                    "superEffective": ["flying", "psychic", "fairy"],
+                    "notVeryEffective": ["bug", "rock", "dark"],
+                    "noEffect": []
+                }
+            },
+            "poison": {
+                "superEffective": ["grass", "fairy"],
+                "notVeryEffective": ["poison", "ground", "rock", "ghost"],
+                "noEffect": ["steel"],
+                "defense": {
+                    "superEffective": ["ground", "psychic"],
+                    "notVeryEffective": ["grass", "fighting", "poison", "bug", "fairy"],
+                    "noEffect": []
+                }
+            },
+            "ground": {
+                "superEffective": ["fire", "electric", "poison", "rock", "steel"],
+                "notVeryEffective": ["grass", "bug"],
+                "noEffect": ["flying"],
+                "defense": {
+                    "superEffective": ["water", "grass", "ice"],
+                    "notVeryEffective": ["poison", "rock"],
+                    "notVeryEffective": ["electric"],
+                    "noEffect": []
+                }
+            },
+            "flying": {
+                "superEffective": ["grass", "fighting", "bug"],
+                "notVeryEffective": ["electric", "rock", "steel"],
+                "noEffect": [],
+                "defense": {
+                    "superEffective": ["electric", "ice", "rock"],
+                    "notVeryEffective": ["grass", "fighting", "bug"],
+                    "notVeryEffective": ["ground"],
+                    "noEffect": []
+                }
+            },
+            "psychic": {
+                "superEffective": ["fighting", "poison"],
+                "notVeryEffective": ["psychic", "steel"],
+                "noEffect": ["dark"],
+                "defense": {
+                    "superEffective": ["bug", "ghost", "dark"],
+                    "notVeryEffective": ["fighting", "psychic"],
+                    "noEffect": []
+                }
+            },
+            "bug": {
+                "superEffective": ["grass", "psychic", "dark"],
+                "notVeryEffective": ["fire", "fighting", "poison", "flying", "ghost", "steel", "fairy"],
+                "noEffect": [],
+                "defense": {
+                    "superEffective": ["fire", "flying", "rock"],
+                    "notVeryEffective": ["grass", "fighting", "ground"],
+                    "noEffect": []
+                }
+            },
+            "rock": {
+                "superEffective": ["fire", "ice", "flying", "bug"],
+                "notVeryEffective": ["fighting", "ground", "steel"],
+                "noEffect": [],
+                "defense": {
+                    "superEffective": ["water", "grass", "fighting", "ground", "steel"],
+                    "notVeryEffective": ["normal", "fire", "poison", "flying"],
+                    "noEffect": []
+                }
+            },
+            "ghost": {
+                "superEffective": ["psychic", "ghost"],
+                "notVeryEffective": ["dark"],
+                "noEffect": ["normal"],
+                "defense": {
+                    "superEffective": ["ghost", "dark"],
+                    "notVeryEffective": ["poison", "bug"],
+                    "notVeryEffective": ["normal", "fighting"],
+                    "noEffect": []
+                }
+            },
+            "dragon": {
+                "superEffective": ["dragon"],
+                "notVeryEffective": ["steel"],
+                "noEffect": ["fairy"],
+                "defense": {
+                    "superEffective": ["ice", "dragon", "fairy"],
+                    "notVeryEffective": ["fire", "water", "electric", "grass"],
+                    "noEffect": []
+                }
+            },
+            "dark": {
+                "superEffective": ["psychic", "ghost"],
+                "notVeryEffective": ["fighting", "dark", "fairy"],
+                "noEffect": [],
+                "defense": {
+                    "superEffective": ["fighting", "bug", "fairy"],
+                    "notVeryEffective": ["ghost", "dark"],
+                    "notVeryEffective": ["psychic"],
+                    "noEffect": []
+                }
+            },
+            "steel": {
+                "superEffective": ["ice", "rock", "fairy"],
+                "notVeryEffective": ["fire", "water", "electric", "steel"],
+                "noEffect": [],
+                "defense": {
+                    "superEffective": ["fire", "fighting", "ground"],
+                    "notVeryEffective": ["normal", "grass", "ice", "flying", "psychic", "bug", "rock", "dragon", "steel", "fairy"],
+                    "notVeryEffective": ["poison"],
+                    "noEffect": []
+                }
+            },
+            "fairy": {
+                "superEffective": ["fighting", "dragon", "dark"],
+                "notVeryEffective": ["fire", "poison", "steel"],
+                "noEffect": [],
+                "defense": {
+                    "superEffective": ["poison", "steel"],
+                    "notVeryEffective": ["fighting", "bug", "dark"],
+                    "notVeryEffective": ["dragon"],
+                    "noEffect": []
+                }
+            }
+        };
+
+        // 属性名称映射
+        const typeNames = {
+            "normal": "一般",
+            "fire": "火",
+            "water": "水",
+            "electric": "电",
+            "grass": "草",
+            "ice": "冰",
+            "fighting": "格斗",
+            "poison": "毒",
+            "ground": "地面",
+            "flying": "飞行",
+            "psychic": "超能力",
+            "bug": "虫",
+            "rock": "岩石",
+            "ghost": "幽灵",
+            "dragon": "龙",
+            "dark": "恶",
+            "steel": "钢",
+            "fairy": "妖精"
+        };
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            initTypeFilter();
+            initTypeChart();
+        });
+
+        // 初始化类型筛选器
+        function initTypeFilter() {
+            const typeFilter = document.getElementById('typeFilter');
+            
+            // 添加"全部"按钮
+            const allButton = document.createElement('button');
+            allButton.className = 'type-btn active';
+            allButton.textContent = '全部';
+            allButton.addEventListener('click', function() {
+                document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                filterTable();
+            });
+            typeFilter.appendChild(allButton);
+            
+            // 添加各属性按钮
+            Object.keys(typeNames).forEach(type => {
+                const button = document.createElement('button');
+                button.className = `type-btn ${type}`;
+                button.textContent = typeNames[type];
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    filterTable(type);
+                });
+                typeFilter.appendChild(button);
+            });
+        }
+
+        // 初始化克制表
+        function initTypeChart() {
+            const table = document.getElementById('typeChart');
+            const thead = table.querySelector('thead tr');
+            const tbody = table.querySelector('tbody');
+            
+            // 创建表头
+            Object.keys(typeNames).forEach(type => {
+                const th = document.createElement('th');
+                th.className = `type-header ${type}`;
+                th.textContent = typeNames[type];
+                thead.appendChild(th);
+            });
+            
+            // 创建表格内容
+            Object.keys(typeNames).forEach(defType => {
+                const row = document.createElement('tr');
+                
+                // 行首类型标签
+                const typeLabel = document.createElement('th');
+                typeLabel.className = `type-header ${defType}`;
+                typeLabel.textContent = typeNames[defType];
+                row.appendChild(typeLabel);
+                
+                // 填充每个单元格
+                Object.keys(typeNames).forEach(atkType => {
+                    const cell = document.createElement('td');
+                    const effectiveness = calculateEffectiveness(atkType, defType);
+                    cell.className = `effect-cell effect-${effectiveness.class}`;
+                    cell.textContent = effectiveness.text;
+                    cell.title = `${typeNames[atkType]} → ${typeNames[defType]}: ${effectiveness.text}`;
+                    row.appendChild(cell);
+                });
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // 计算攻击效果
+        function calculateEffectiveness(attackType, defenseType) {
+            const attackData = typeChart[attackType];
+            let multiplier = 1;
+            
+            if (attackData.superEffective.includes(defenseType)) {
+                multiplier *= 2;
+            } else if (attackData.notVeryEffective.includes(defenseType)) {
+                multiplier *= 0.5;
+            } else if (attackData.noEffect.includes(defenseType)) {
+                multiplier *= 0;
+            }
+            
+            // 返回效果类别和显示文本
+            if (multiplier === 0) {
+                return { class: "0", text: "0" };
+            } else if (multiplier === 0.25) {
+                return { class: "0_25", text: "¼" };
+            } else if (multiplier === 0.5) {
+                return { class: "0_5", text: "½" };
+            } else if (multiplier === 1) {
+                return { class: "1", text: "1" };
+            } else if (multiplier === 2) {
+                return { class: "2", text: "2" };
+            } else if (multiplier === 4) {
+                return { class: "4", text: "4" };
+            }
+        }
+
+        // 筛选表格显示
+        function filterTable(selectedType) {
+            const rows = document.querySelectorAll('#typeChart tbody tr');
+            const cells = document.querySelectorAll('#typeChart td');
+            
+            // 重置所有单元格透明度
+            cells.forEach(cell => {
+                cell.style.opacity = '1';
+            });
+            
+            // 如果选择了特定类型，高亮相关行列
+            if (selectedType) {
+                const typeIndex = Object.keys(typeNames).indexOf(selectedType) + 1; // +1 因为第一列是标签
+                
+                // 淡化不相关的行列
+                cells.forEach(cell => {
+                    cell.style.opacity = '0.3';
+                });
+                
+                // 高亮选中行（防御方）
+                rows.forEach(row => {
+                    const firstCell = row.cells[0];
+                    if (firstCell.classList.contains(selectedType)) {
+                        Array.from(row.cells).forEach(cell => {
+                            cell.style.opacity = '1';
+                        });
+                    }
+                });
+                
+                // 高亮选中列（攻击方）
+                rows.forEach(row => {
+                    const cell = row.cells[typeIndex];
+                    if (cell) cell.style.opacity = '1';
+                });
+            }
+        }
+    </script>
+      
+</body>
+</html>
